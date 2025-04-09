@@ -1,11 +1,8 @@
-from typing import Annotated, AsyncGenerator
-from jose import JWTError, jwt
-from fastapi import Depends
+from typing import Annotated
+from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.ext.asyncio import AsyncConnection
-from contextlib import asynccontextmanager
 
-from core.config import settings
 from core.engine import get_connection
 
 from schemas.user import UserResponse
@@ -39,24 +36,13 @@ async def get_current_user(
     credentials: Annotated[HTTPAuthorizationCredentials, Depends(security)],
     uow: Annotated[UnitOfWork, Depends(get_uow)]
 ) -> UserResponse:
-    try:
-        token = credentials.credentials
-        payload = jwt.decode(
-            token,
-            settings.SECRET_KEY,
-            algorithms=[settings.ALGORITHM]
-        )
-        
-        if (user_id := payload.get("sub")) is None:
-            raise InvalidCredentialsError()
-            
-        if datetime.fromtimestamp(payload["exp"]) < datetime.now():
-            raise InvalidCredentialsError("Token expired")
-            
-    except JWTError as exc:
-        raise InvalidCredentialsError() from exc
-
-    user = await uow.users.get_by_id(user_id)
+    token = credentials.credentials
+    
+    token_data = await uow.auth_token.get_valid_token(token)
+    if not token_data:
+        raise InvalidCredentialsError()
+    
+    user = await uow.users.get_by_id(token_data["user_id"])
     if not user:
         raise UserNotFoundError()
         

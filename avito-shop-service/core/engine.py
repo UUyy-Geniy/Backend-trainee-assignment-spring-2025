@@ -12,5 +12,4 @@ engine = create_async_engine(
 
 async def get_connection() -> AsyncConnection:
     conn = await engine.connect()
-    print(f"New connection: {id(conn)}")
     return conn

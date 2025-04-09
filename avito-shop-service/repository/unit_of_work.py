@@ -2,13 +2,13 @@ from contextlib import asynccontextmanager
 from sqlalchemy.ext.asyncio import AsyncConnection
 
 from repository.user import UserRepository
-from repository.auth import AuthRepository
+from repository.auth_token import AuthTokenRepository
 
 class UnitOfWork:
     def __init__(self, conn: AsyncConnection):
         self.conn = conn
         self.users = UserRepository(conn)
-        self.auth = AuthRepository(conn)
+        self.auth_token = AuthTokenRepository(conn)
 
     @asynccontextmanager
     async def atomic(self):

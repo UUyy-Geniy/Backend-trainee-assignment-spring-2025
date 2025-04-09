@@ -102,4 +102,7 @@ auth_tokens = Table(
     Column("token", String(511), primary_key=True),
     Column("user_id", UUID, ForeignKey("users.id"), nullable=False),
     Column("expires_at", DateTime, nullable=False),
+    Index("idx_auth_tokens_user_id", "user_id"),
+    Index("idx_auth_tokens_expires_at", "expires_at"),
+    Index("idx_auth_tokens_user_expires", "user_id", "expires_at")
 )

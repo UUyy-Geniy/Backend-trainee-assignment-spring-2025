@@ -21,3 +21,4 @@ pytest-tornasync
 pytest-trio
 pytest-twisted
 twisted
+apscheduler==3.10.1
