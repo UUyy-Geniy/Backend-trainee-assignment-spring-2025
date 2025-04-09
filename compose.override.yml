@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  avito-shop-service:
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=db
+      - POSTGRES_SERVER=db
+      - POSTGRES_PORT=5432
+      - PROJECT_NAME=avito
+  db:
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=db
+  adminer:
+    image: adminer:latest
+    ports:
+      - "8080:8080"
+    networks:
+      - shop-network
+    depends_on:
+      - db
