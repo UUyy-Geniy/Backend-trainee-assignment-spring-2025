@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncConnection
 from repository.base import BaseRepository
 from typing import Optional
 
-class AuthTokenRepository(BaseRepository[Table]):
+class AuthRepository(BaseRepository[Table]):
     def __init__(self, conn: AsyncConnection):
         super().__init__(auth_tokens, conn)
 
@@ -14,13 +14,6 @@ class AuthTokenRepository(BaseRepository[Table]):
             token=token,
             user_id=user_id,
             expires_at=expires_at
-        )
-
-    async def delete_expired_tokens(self):
-        await self.conn.execute(
-            self.table.delete().where(
-                self.table.c.expires_at <= datetime.utcnow()
-            )
         )
 
     async def get_valid_token(self, token: str) -> Optional[dict]:

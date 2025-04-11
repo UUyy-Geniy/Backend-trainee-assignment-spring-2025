@@ -18,9 +18,8 @@ class Settings(BaseSettings):
         env_file=".env", env_ignore_empty=True, extra="ignore"
     )
 
-    SCHEDULER_ENABLED: bool = True
-    TOKEN_CLEANUP_INTERVAL: int = 60
-    SCHEDULER_LOGGING_LEVEL: str = "INFO"
+    SECRET_KEY: str = "SECRET_KEY"
+    ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
     API_V1_STR: str = "/api/v1"
