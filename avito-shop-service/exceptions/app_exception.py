@@ -49,3 +49,35 @@ class InvalidCredentialsError(AppException):
             message="Invalid credentials",
             status_code=401
         )
+
+class ActiveReceptionExistsError(AppException):
+    def __init__(self):
+        super().__init__(
+            error_type=ErrorType.BUSINESS,
+            message="Active reception already exists",
+            status_code=400
+        )
+
+class NoActiveReceptionError(AppException):
+    def __init__(self):
+        super().__init__(
+            error_type=ErrorType.BUSINESS,
+            message="No active reception",
+            status_code=400
+        )
+
+class InsufficientPermissionsError(AppException):
+    def __init__(self):
+        super().__init__(
+            error_type=ErrorType.BUSINESS,
+            message="Insufficient permissions",
+            status_code=403
+        )
+
+class NoProductToDeleteError(AppException):
+    def __init__(self):
+        super().__init__(
+            error_type=ErrorType.BUSINESS,
+            message="No product to delete",
+            status_code=400
+        )

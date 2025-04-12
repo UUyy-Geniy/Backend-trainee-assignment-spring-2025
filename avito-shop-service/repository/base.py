@@ -31,6 +31,7 @@ class BaseRepository(Generic[TableType]):
     
     async def get_by_id(self, _id: Any) -> Optional[dict]:
         return await self.get(self.table.c.id == _id)
+    
     async def create(self, **data) -> dict:
         data = self._before_creation(**data)
         query = insert(self.table).values(**data).returning(self.table)
@@ -42,9 +43,10 @@ class BaseRepository(Generic[TableType]):
             update(self.table)
             .where(self.table.c.id == _id)
             .values(**data)
+            .returning(self.table)
         )
         result = await self.conn.execute(query)
-        return result.rowcount > 0
+        return result.mappings().first()
 
     async def delete(self, _id: Any) -> bool:
         query = delete(self.table).where(self.table.c.id == _id)

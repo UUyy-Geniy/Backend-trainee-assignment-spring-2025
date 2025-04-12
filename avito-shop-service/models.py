@@ -95,11 +95,3 @@ products = Table(
     Index("idx_products_type", "type"),
     CheckConstraint("type IN ('электроника', 'одежда', 'обувь')", name="valid_product_types")
 )
-
-auth_tokens = Table(
-    "auth_tokens",
-    metadata,
-    Column("token", String(511), primary_key=True),
-    Column("user_id", UUID, ForeignKey("users.id"), nullable=False),
-    Column("expires_at", DateTime, nullable=False),
-)

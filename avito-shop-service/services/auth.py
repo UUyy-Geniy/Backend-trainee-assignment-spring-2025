@@ -1,6 +1,5 @@
 from datetime import datetime, timedelta
-from typing import Optional
-from jose import JWTError, jwt
+from jose import jwt
 from core.config import settings
 from repository.unit_of_work import UnitOfWork
 from exceptions.app_exception import (
