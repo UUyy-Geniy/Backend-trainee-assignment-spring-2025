@@ -10,7 +10,6 @@ from core.engine import get_connection
 
 from schemas.user import UserResponse
 from repository.unit_of_work import UnitOfWork
-from services.user import UserService
 from services.auth import AuthService
 from services.products import ProductService
 from services.receptions import ReceptionService
@@ -23,11 +22,6 @@ async def get_uow(conn: AsyncConnection = Depends(get_connection)) -> UnitOfWork
     finally:
         await conn.close()
 
-
-def get_user_service(
-    uow: Annotated[UnitOfWork, Depends(get_uow)]
-) -> UserService:
-    return UserService(uow)
 
 def get_auth_service(
     uow: Annotated[UnitOfWork, Depends(get_uow)]

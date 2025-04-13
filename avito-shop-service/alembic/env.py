@@ -19,12 +19,15 @@ target_metadata = metadata
 
 
 def _get_url():
-    user = os.getenv("POSTGRES_USER", "user")
-    password = os.getenv("POSTGRES_PASSWORD", "password")
-    host = os.getenv("POSTGRES_SERVER", "localhost")
-    port = os.getenv("POSTGRES_PORT", "5432")
-    db = os.getenv("POSTGRES_DB", "db")
-    return f"postgresql://{user}:{password}@{host}:{port}/{db}"
+    if os.getenv("TESTING"):
+        return "postgresql+psycopg2://test_user:test_password@test_db:5433/test_db"
+    else:
+        user = os.getenv("POSTGRES_USER", "user")
+        password = os.getenv("POSTGRES_PASSWORD", "password")
+        host = os.getenv("POSTGRES_SERVER", "localhost")
+        port = os.getenv("POSTGRES_PORT", "5432")
+        db = os.getenv("POSTGRES_DB", "db")
+        return f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{db}"
 
 
 def run_migrations_offline() -> None:

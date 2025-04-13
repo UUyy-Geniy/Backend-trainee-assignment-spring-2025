@@ -2,9 +2,9 @@ from models import products
 from repository.base import BaseRepository
 from sqlalchemy.ext.asyncio import AsyncConnection
 from typing import Optional
-from sqlalchemy import select, update
+from sqlalchemy import select, update, Table
 
-class ProductRepository(BaseRepository):
+class ProductRepository(BaseRepository[Table]):
     def __init__(self, conn: AsyncConnection):
         super().__init__(products, conn)
     
@@ -27,3 +27,8 @@ class ProductRepository(BaseRepository):
         query = update(self.table).where(self.table.c.id == product_id).values(removed=True)
         result = await self.conn.execute(query)
         return result.rowcount > 0
+
+    async def get_all_by_receprion_id(self, reception_id: str) -> list[dict]:
+        query = select(self.table).where(self.table.c.reception_id == reception_id)
+        result = await self.conn.execute(query)
+        return result.mappings().all()

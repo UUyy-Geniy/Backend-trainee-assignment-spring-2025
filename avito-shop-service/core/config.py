@@ -55,6 +55,18 @@ class Settings(BaseSettings):
             port=self.POSTGRES_PORT,
             path=self.POSTGRES_DB,
         )
+    
+    @computed_field  # type: ignore[misc]
+    @property
+    def SQLALCHEMY_TEST_DATABASE_URI(self) -> PostgresDsn:
+        return MultiHostUrl.build(
+            scheme="postgresql+asyncpg",
+            username="test_user",
+            password="test_password",
+            host="test_db",
+            port=5432,
+            path="test_db",
+        )
 
 
 settings = Settings()  # type: ignore
