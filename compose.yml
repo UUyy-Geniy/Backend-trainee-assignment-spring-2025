@@ -9,6 +9,7 @@ services:
       - ./avito-shop-service:/app
     ports:
       - "8080:8080"
+      - "9000:9000"
     depends_on:
       db:
         condition: service_healthy
@@ -40,6 +41,32 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+
+  grpc-server:
+    build:
+      context: .
+      dockerfile: avito-shop-service/Dockerfile
+    command: python grpc_service/server.py
+    environment:
+      - POSTGRES_SERVER=db
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - PROJECT_NAME=${PROJECT_NAME}
+    ports:
+      - "3000:3000"
+    networks:
+      - shop-network
+  
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./avito-shop-service/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+    networks:
+      - shop-network
 
 volumes:
   postgres_data:

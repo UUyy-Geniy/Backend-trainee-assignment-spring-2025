@@ -1,5 +1,6 @@
 from repository.unit_of_work import UnitOfWork
 from exceptions.app_exception import NoActiveReceptionError, NoProductToDeleteError
+from metrics.metrics import PRODUCTS_ADDED
 
 class ProductService:
     def __init__(self, uow: UnitOfWork):
@@ -14,11 +15,13 @@ class ProductService:
             last_product = await self._uow.products.get_last_product(reception['id'])
             next_order = (last_product['removal_order'] + 1) if last_product else 1
             
-            return await self._uow.products.create(
+            result = await self._uow.products.create(
                 reception_id=reception['id'],
                 type=product_type,
                 removal_order=next_order
             )
+            PRODUCTS_ADDED.inc()
+            return result
 
     async def delete_last_product(self, pvz_id: str) -> bool:
         async with self._uow.atomic():

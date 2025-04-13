@@ -1,6 +1,6 @@
 from exceptions.app_exception import ActiveReceptionExistsError, NoActiveReceptionError
 from repository.unit_of_work import UnitOfWork
-
+from metrics.metrics import RECEPTIONS_CREATED
 
 class ReceptionService:
     def __init__(self, uow: UnitOfWork):
@@ -12,10 +12,12 @@ class ReceptionService:
             if active:
                 raise ActiveReceptionExistsError()
                 
-            return await self._uow.receptions.create(
+            result = await self._uow.receptions.create(
                 pvz_id=pvz_id,
                 status='in_progress'
             )
+            RECEPTIONS_CREATED.inc()
+            return result
     
     async def close_last_reception(self, pvz_id: str) -> dict:
         async with self._uow.atomic():

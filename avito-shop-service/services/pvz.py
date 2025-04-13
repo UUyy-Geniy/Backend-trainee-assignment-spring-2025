@@ -1,6 +1,8 @@
 from repository.unit_of_work import UnitOfWork
 from datetime import datetime
 from sqlalchemy import select, func, text
+from metrics.metrics import PVZ_CREATED
+import logging
 
 class PVZService:
     def __init__(self, uow: UnitOfWork):
@@ -8,7 +10,13 @@ class PVZService:
     
     async def create_pvz(self, city: str, moderator_id: str) -> dict:
         async with self._uow.atomic():
-            return await self._uow.pvz.create_pvz(city, moderator_id)
+            result = await self._uow.pvz.create_pvz(city, moderator_id)
+            PVZ_CREATED.inc()
+            return result
+    
+    async def get_all_pvz(self) -> list[dict]:
+        async with self._uow.atomic():
+            return await self._uow.pvz.get_all_pvz()
     
     async def get_pvz_list(
         self,

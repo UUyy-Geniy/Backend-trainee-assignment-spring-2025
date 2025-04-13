@@ -22,3 +22,7 @@ pytest-trio
 pytest-twisted
 twisted
 pytest-cov
+grpcio
+grpcio-tools
+grpcio-reflection
+prometheus_client

@@ -58,3 +58,12 @@ services:
       TESTING: "true"
     networks:
       - shop-network
+    
+  grpc-server:
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=db
+      - POSTGRES_SERVER=db
+      - POSTGRES_PORT=5432
+      - PROJECT_NAME=avito
