@@ -7,7 +7,7 @@ Backend-сервис для сотрудников пунктов выдачи �
 ### 1. Клонируйте репозиторий
 
 ```bash
-git clone https://github.com/your-user/avito-shop-service.git
+git clone https://github.com/UUyy-Geniy/Backend-trainee-assignment-spring-2025.git
 cd avito-shop-service
 ```
 
