@@ -13,6 +13,10 @@ class UserCreate(UserBase):
     password: str = Field(..., example="secret")
 
 
+class UserRegisterResponse(UserBase):
+    id: UUID
+
+
 class UserResponse(UserBase):
     id: UUID
     created_at: datetime

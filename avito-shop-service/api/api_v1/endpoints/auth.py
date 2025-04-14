@@ -1,6 +1,7 @@
 from api.deps import get_auth_service
 from fastapi import APIRouter, Depends, status
 from schemas.auth import AuthResponse, DummyLoginRequest, LoginRequest, RegisterRequest
+from schemas.user import UserRegisterResponse
 from services.auth import AuthService
 
 router = APIRouter()
@@ -12,7 +13,7 @@ async def dummy_login(request: DummyLoginRequest, auth_service: AuthService = De
     return {"token": token}
 
 
-@router.post("/register", status_code=status.HTTP_201_CREATED)
+@router.post("/register", status_code=status.HTTP_201_CREATED, response_model=UserRegisterResponse)
 async def register(request: RegisterRequest, auth_service: AuthService = Depends(get_auth_service)):
     user = await auth_service.register_user(request.email, request.password, request.role)
     return {"id": user["id"], "email": user["email"], "role": user["role"]}

@@ -23,5 +23,9 @@ class PVZResponse(PVZCreateRequest):
     receptions: list[ReceptionWithProductsResponse] = []
 
 
+class DeleteLastProductResponse(BaseModel):
+    status: str
+
+
 class PVZToDelete(BaseModel):
     id: UUID

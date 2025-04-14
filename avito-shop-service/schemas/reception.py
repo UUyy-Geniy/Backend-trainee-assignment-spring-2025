@@ -9,6 +9,10 @@ class ReceptionRequest(BaseModel):
     pvz_id: UUID
 
 
+class ReceptionCreateResponse(BaseModel):
+    id: UUID
+
+
 class ReceptionResponse(BaseModel):
     id: UUID
     date_time: datetime

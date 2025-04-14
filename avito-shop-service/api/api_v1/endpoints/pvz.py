@@ -10,7 +10,7 @@ from api.deps import (
     get_reception_service,
 )
 from fastapi import APIRouter, Depends, Query, status
-from schemas.pvz import PVZCreateRequest, PVZResponse
+from schemas.pvz import DeleteLastProductResponse, PVZCreateRequest, PVZResponse
 from schemas.reception import ReceptionResponse
 from services.products import ProductService
 from services.pvz import PVZService
@@ -50,11 +50,11 @@ async def close_last_reception(
     return await service.close_last_reception(pvz_id)
 
 
-@router.post("/{pvz_id}/delete_last_product", status_code=status.HTTP_200_OK)
+@router.post("/{pvz_id}/delete_last_product", status_code=status.HTTP_200_OK, response_model=DeleteLastProductResponse)
 async def delete_last_product(
     pvz_id: UUID,
     employee: dict = Depends(get_current_employee),
     service: ProductService = Depends(get_product_service),
 ):
     await service.delete_last_product(pvz_id)
-    return {"status": "success"}
+    return DeleteLastProductResponse(status="success")
