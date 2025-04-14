@@ -13,7 +13,7 @@ class ProductType(str, Enum):
 
 class ProductRequest(BaseModel):
     type: ProductType
-    pvz_id: str
+    pvz_id: UUID
 
 
 class ProductResponse(BaseModel):

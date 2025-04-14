@@ -86,3 +86,12 @@ class NoProductToDeleteError(AppException):
             message="No product to delete",
             status_code=400,
         )
+
+
+class PVZNotFoundError(AppException):
+    def __init__(self):
+        super().__init__(
+            error_type=ErrorType.NOT_FOUND,
+            message="PVZ not found",
+            status_code=404,
+        )

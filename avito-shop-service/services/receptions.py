@@ -1,4 +1,4 @@
-from exceptions.app_exception import ActiveReceptionExistsError, NoActiveReceptionError
+from exceptions.app_exception import ActiveReceptionExistsError, NoActiveReceptionError, PVZNotFoundError
 from metrics.metrics import RECEPTIONS_CREATED
 from repository.unit_of_work import UnitOfWork
 
@@ -9,6 +9,10 @@ class ReceptionService:
 
     async def start_reception(self, pvz_id: str) -> dict:
         async with self._uow.atomic():
+            pvz = await self._uow.pvz.get_by_id(pvz_id)
+            if not pvz:
+                raise PVZNotFoundError()
+
             active = await self._uow.receptions.get_active_reception(pvz_id)
             if active:
                 raise ActiveReceptionExistsError()
@@ -19,6 +23,10 @@ class ReceptionService:
 
     async def close_last_reception(self, pvz_id: str) -> dict:
         async with self._uow.atomic():
+            pvz = await self._uow.pvz.get_by_id(pvz_id)
+            if not pvz:
+                raise PVZNotFoundError()
+
             reception = await self._uow.receptions.get_active_reception(pvz_id)
             if not reception:
                 raise NoActiveReceptionError()

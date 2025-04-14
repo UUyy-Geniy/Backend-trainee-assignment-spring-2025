@@ -1,4 +1,4 @@
-from exceptions.app_exception import NoActiveReceptionError, NoProductToDeleteError
+from exceptions.app_exception import NoActiveReceptionError, NoProductToDeleteError, PVZNotFoundError
 from metrics.metrics import PRODUCTS_ADDED
 from repository.unit_of_work import UnitOfWork
 
@@ -9,6 +9,10 @@ class ProductService:
 
     async def add_product(self, pvz_id: str, product_type: str) -> dict:
         async with self._uow.atomic():
+            pvz = await self._uow.pvz.get_by_id(pvz_id)
+            if not pvz:
+                raise PVZNotFoundError()
+
             reception = await self._uow.receptions.get_active_reception(pvz_id)
             if not reception:
                 raise NoActiveReceptionError()
@@ -26,6 +30,10 @@ class ProductService:
 
     async def delete_last_product(self, pvz_id: str) -> bool:
         async with self._uow.atomic():
+            pvz = await self._uow.pvz.get_by_id(pvz_id)
+            if not pvz:
+                raise PVZNotFoundError()
+
             reception = await self._uow.receptions.get_active_reception(pvz_id)
             if not reception:
                 raise NoActiveReceptionError()
