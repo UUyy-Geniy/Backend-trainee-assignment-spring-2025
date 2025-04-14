@@ -1,7 +1,8 @@
-from pydantic import BaseModel, Field
-from pydantic.types import UUID
 from datetime import datetime
 from enum import Enum
+
+from pydantic import BaseModel
+from pydantic.types import UUID
 from schemas.reception import ReceptionWithProductsResponse
 
 
@@ -10,14 +11,17 @@ class City(str, Enum):
     SPB = "Санкт-Петербург"
     KAZAN = "Казань"
 
+
 class PVZCreateRequest(BaseModel):
-    city : City
+    city: City
+
 
 class PVZResponse(PVZCreateRequest):
     id: UUID
     registration_date: datetime
     moderator_id: UUID
     receptions: list[ReceptionWithProductsResponse] = []
+
 
 class PVZToDelete(BaseModel):
     id: UUID

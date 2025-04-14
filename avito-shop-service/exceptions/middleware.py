@@ -12,6 +12,7 @@ error_type_to_status_code = {
     ErrorType.SYSTEM: status.HTTP_500_INTERNAL_SERVER_ERROR,
 }
 
+
 class ErrorHandlingMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next: callable):
         try:
@@ -24,9 +25,9 @@ class ErrorHandlingMiddleware(BaseHTTPMiddleware):
                     "error": {
                         "type": exc.error_type,
                         "message": exc.message,
-                        "details": exc.details
+                        "details": exc.details,
                     }
-                }
+                },
             )
         except Exception as exc:
             return JSONResponse(
@@ -35,7 +36,7 @@ class ErrorHandlingMiddleware(BaseHTTPMiddleware):
                     "error": {
                         "type": ErrorType.SYSTEM,
                         "message": "Internal server error",
-                        "details": {"exception": str(exc)}
+                        "details": {"exception": str(exc)},
                     }
-                }
+                },
             )

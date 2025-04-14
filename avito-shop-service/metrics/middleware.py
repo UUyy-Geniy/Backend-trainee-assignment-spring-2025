@@ -1,10 +1,12 @@
-from fastapi import Request
 import logging
-from metrics.metrics import REQUEST_COUNT, REQUEST_LATENCY
 import time
+
+from fastapi import Request
+from metrics.metrics import REQUEST_COUNT, REQUEST_LATENCY
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
 
 async def add_metrics_middleware(request: Request, call_next):
     start_time = time.time()

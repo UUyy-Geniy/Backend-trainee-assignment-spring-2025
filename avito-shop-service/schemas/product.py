@@ -1,16 +1,20 @@
+from datetime import datetime
+from enum import Enum
+
 from pydantic import BaseModel
 from pydantic.types import UUID
-from enum import Enum
-from datetime import datetime
+
 
 class ProductType(str, Enum):
     ELECTRONICS = "электроника"
     CLOTHES = "одежда"
     SHOES = "обувь"
 
+
 class ProductRequest(BaseModel):
     type: ProductType
     pvz_id: str
+
 
 class ProductResponse(BaseModel):
     id: UUID

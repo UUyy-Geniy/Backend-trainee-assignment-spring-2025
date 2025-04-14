@@ -1,48 +1,57 @@
-from sqlalchemy import (
-    MetaData,
-    Table,
-    Column,
-    UUID,
-    String,
-    DateTime,
-    Boolean,
-    ForeignKey,
-    CheckConstraint,
-    func,
-    Integer,
-    Index,
-    text
-)
-from sqlalchemy.dialects.postgresql import ENUM
 import enum
 
+from sqlalchemy import (
+    UUID,
+    Boolean,
+    CheckConstraint,
+    Column,
+    DateTime,
+    ForeignKey,
+    Index,
+    Integer,
+    MetaData,
+    String,
+    Table,
+    func,
+    text,
+)
+from sqlalchemy.dialects.postgresql import ENUM
+
 metadata = MetaData()
+
 
 class UserRole(enum.Enum):
     EMPLOYEE = "employee"
     MODERATOR = "moderator"
 
-userrole = ENUM('employee', 'moderator', name='userrole', create_type=False)
+
+userrole = ENUM("employee", "moderator", name="userrole", create_type=False)
+
 
 class City(enum.Enum):
     MOSCOW = "Москва"
     SPB = "Санкт-Петербург"
     KAZAN = "Казань"
 
-city = ENUM('Москва', 'Санкт-Петербург', 'Казань', name='city', create_type=False)
+
+city = ENUM("Москва", "Санкт-Петербург", "Казань", name="city", create_type=False)
+
 
 class ReceptionStatus(enum.Enum):
     IN_PROGRESS = "in_progress"
     CLOSE = "close"
 
-receptionstatus = ENUM('in_progress', 'close', name='receptionstatus', create_type=False)
+
+receptionstatus = ENUM("in_progress", "close", name="receptionstatus", create_type=False)
+
 
 class ProductType(enum.Enum):
     ELECTRONICS = "электроника"
     CLOTHES = "одежда"
     SHOES = "обувь"
 
-producttype = ENUM('электроника', 'одежда', 'обувь', name='producttype', create_type=False)
+
+producttype = ENUM("электроника", "одежда", "обувь", name="producttype", create_type=False)
 
 users = Table(
     "users",
@@ -54,7 +63,7 @@ users = Table(
     Column("created_at", DateTime, server_default=func.now()),
     Index("idx_users_email", "email"),
     Index("idx_users_role", "role"),
-    CheckConstraint("role IN ('employee', 'moderator')", name="valid_user_roles")
+    CheckConstraint("role IN ('employee', 'moderator')", name="valid_user_roles"),
 )
 
 pvz = Table(
@@ -66,7 +75,7 @@ pvz = Table(
     Column("moderator_id", UUID, ForeignKey("users.id"), nullable=False),
     Index("idx_pvz_city", "city"),
     Index("idx_pvz_moderator", "moderator_id"),
-    CheckConstraint("city IN ('Москва', 'Санкт-Петербург', 'Казань')", name="valid_cities")
+    CheckConstraint("city IN ('Москва', 'Санкт-Петербург', 'Казань')", name="valid_cities"),
 )
 
 receptions = Table(
@@ -78,7 +87,7 @@ receptions = Table(
     Column("status", receptionstatus, nullable=False, server_default="in_progress"),
     Index("idx_receptions_pvz_status", "pvz_id", "status"),
     Index("idx_receptions_datetime", "date_time"),
-    CheckConstraint("status IN ('in_progress', 'close')", name="valid_reception_status")
+    CheckConstraint("status IN ('in_progress', 'close')", name="valid_reception_status"),
 )
 
 products = Table(
@@ -93,5 +102,5 @@ products = Table(
     Index("idx_products_reception", "reception_id"),
     Index("idx_products_removal_order", text("removal_order DESC")),
     Index("idx_products_type", "type"),
-    CheckConstraint("type IN ('электроника', 'одежда', 'обувь')", name="valid_product_types")
+    CheckConstraint("type IN ('электроника', 'одежда', 'обувь')", name="valid_product_types"),
 )

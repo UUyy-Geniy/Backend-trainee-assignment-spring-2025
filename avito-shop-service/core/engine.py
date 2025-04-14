@@ -1,4 +1,5 @@
 from sqlalchemy.ext.asyncio import AsyncConnection, create_async_engine
+
 from .config import settings
 
 DATABASE_URI = str(settings.SQLALCHEMY_DATABASE_URI)
@@ -7,8 +8,9 @@ engine = create_async_engine(
     str(settings.SQLALCHEMY_DATABASE_URI),
     pool_size=20,
     max_overflow=10,
-    pool_pre_ping=True
+    pool_pre_ping=True,
 )
+
 
 async def get_connection() -> AsyncConnection:
     conn = await engine.connect()

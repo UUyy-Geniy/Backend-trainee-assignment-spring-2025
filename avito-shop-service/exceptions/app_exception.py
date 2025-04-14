@@ -1,8 +1,9 @@
+import logging
 from enum import Enum
 from typing import Any, Dict, Optional
-import logging
 
 logger = logging.getLogger(__name__)
+
 
 class ErrorType(str, Enum):
     NOT_FOUND = "not_found"
@@ -11,13 +12,14 @@ class ErrorType(str, Enum):
     AUTH = "authentication_error"
     SYSTEM = "system_error"
 
+
 class AppException(Exception):
     def __init__(
         self,
         error_type: ErrorType,
         message: str,
         status_code: int,
-        details: Optional[Dict[str, Any]] = None
+        details: Optional[Dict[str, Any]] = None,
     ):
         self.error_type = error_type
         self.message = message
@@ -25,14 +27,16 @@ class AppException(Exception):
         self.details = details or {}
         logger.error(f"{error_type}: {message}", extra=details)
 
+
 class UserAlreadyExistsError(AppException):
     def __init__(self, email: str):
         super().__init__(
             error_type=ErrorType.BUSINESS,
             message="Email already registered",
             status_code=400,
-            details={"email": email}
+            details={"email": email},
         )
+
 
 class UserNotFoundError(AppException):
     def __init__(self, message: str = "User not found"):
@@ -42,42 +46,43 @@ class UserNotFoundError(AppException):
             status_code=404,
         )
 
+
 class InvalidCredentialsError(AppException):
     def __init__(self):
-        super().__init__(
-            error_type=ErrorType.AUTH,
-            message="Invalid credentials",
-            status_code=401
-        )
+        super().__init__(error_type=ErrorType.AUTH, message="Invalid credentials", status_code=401)
+
 
 class ActiveReceptionExistsError(AppException):
     def __init__(self):
         super().__init__(
             error_type=ErrorType.BUSINESS,
             message="Active reception already exists",
-            status_code=400
+            status_code=400,
         )
+
 
 class NoActiveReceptionError(AppException):
     def __init__(self):
         super().__init__(
             error_type=ErrorType.BUSINESS,
             message="No active reception",
-            status_code=400
+            status_code=400,
         )
+
 
 class InsufficientPermissionsError(AppException):
     def __init__(self):
         super().__init__(
             error_type=ErrorType.BUSINESS,
             message="Insufficient permissions",
-            status_code=403
+            status_code=403,
         )
+
 
 class NoProductToDeleteError(AppException):
     def __init__(self):
         super().__init__(
             error_type=ErrorType.BUSINESS,
             message="No product to delete",
-            status_code=400
+            status_code=400,
         )
